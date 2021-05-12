@@ -13,8 +13,7 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.http.uri.UriBuilder
 import org.grails.web.json.JSONObject
 
-@CompileStatic
-class ZARToUSDService implements GrailsConfigurationAware {
+class ZarToUsdService implements GrailsConfigurationAware {
     String apikey
     BlockingHttpClient client
 
@@ -28,6 +27,17 @@ class ZARToUSDService implements GrailsConfigurationAware {
 
     void setupHttpClient(String url) {
         this.client = HttpClient.create(url.toURL()).toBlocking()
+    }
+
+    CurrencyConvertion currencyConvertion(Float aFloat) {
+
+        //add your code here
+
+        def currencyConvertion = new CurrencyConvertion()
+        currencyConvertion.usValue = 1.23f
+        currencyConvertion.zaValue = 2.34f
+
+        currencyConvertion
     }
 
     CurrencyConvertion currencyConvertion() {

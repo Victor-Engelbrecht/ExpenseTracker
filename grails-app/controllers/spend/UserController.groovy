@@ -2,8 +2,7 @@ package spend
 
 import grails.validation.ValidationException
 import spend.CurrencyConvertion
-import spend.ZARToUSDService
-import static org.springframework.http.HttpStatus.*
+
 //added to export to csv
 import grails.config.Config
 import grails.core.support.GrailsConfigurationAware
@@ -14,7 +13,7 @@ class UserController implements GrailsConfigurationAware{
     //generated code
     UserService userService
     //used for converting zar to usd
-    ZARToUSDService zARToUSDService
+    ZarToUsdService zarToUsdService
     CurrencyConvertion currencyConvertion
 
     //used for csv
@@ -28,23 +27,23 @@ class UserController implements GrailsConfigurationAware{
         respond userService.list(params), model:[Userount: userService.count()]
     }*/
 
-    /*def index(float test) {
-        CurrencyConvertion currencyConvertion = zARToUSDService.currencyConvertion(test)
-        [CurrencyConvertion: currencyConvertion]
-        render(view:"home")
-    }*/
+    def indexFloat(Float test) {
+        CurrencyConvertion currencyConvertion = zarToUsdService.currencyConvertion(test)
+
+        render(view:"home", model:[currencyConvertion: currencyConvertion])
+    }
 
     def index() {
         final String filename = 'Transactions.csv'
-        def lines = User.findAll().collect { [it.name, it.transactions].join(';') } as List&amp;lt;String&amp;gt;
+        def lines = User.findAll().collect { [it.name, it.transactions].join(';') } as List<String>
 
         def outs = response.outputStream
         response.status = OK.value()
-        response.contentType = "&#36;{csvMimeType};charset=&#36;{encoding}";
-        response.setHeader "Content-disposition", "attachment; filename=&#36;{filename}"
+        response.contentType = "${csvMimeType};charset=${encoding}";
+        response.setHeader "Content-disposition", "attachment; filename=${filename}"
 
-        lines.each { String line -&amp;gt;
-            outs &amp;lt;amp;lt; "&#36;{line}\n"
+        lines.each { String line ->
+            outs << "${line}\n"
         }
 
         outs.flush()
